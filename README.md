@@ -6,9 +6,13 @@ Para que el script funcione correctamente, es necesario lo siguiente:
 
 - **Activadores de Google Apps Script**:  
   - **Desde la hoja de cálculo - Al modificar**: Activa la función `onChange` cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`. La Hoja debe tener los encabezados fecha inicial, fecha final que carga desde runamatic estos datos como campos de fecha y hora. 
-    Este activador manda el contenido de la HOJA_DE_FECHA al campo de bot) 
+
+    Este activador manda el contenido de la HOJA_DE_FECHA al campo de bot
+    
   - **Calendario - Modificado**: Activa la función `alActualizarCalendario` cuando se modifica el calendario configurado en `CALENDAR_ID`.  
+
     Este activador permite actualizar la hoja de disponibilidad cuando se actualiza el calendario.
+    
 - **Archivos y Hojas**:  
   - `Disponibilidad`: Almacena fechas, franjas horarias y estado (Disponible/Ocupado).  
   - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`: Contiene los datos enviados a la API. Debe tener el siguiente formato:  
