@@ -19,7 +19,7 @@ function regenerarHorariosDisponibles() {
 
   var today = new Date();
   var future = new Date();
-  future.setDate(today.getDate() + 119); // Corregido para 119 días
+  future.setDate(today.getDate() + 119); // cantidad de días que se van actualizar
 
   var calendar = CalendarApp.getCalendarById(CALENDAR_ID);
   var events = calendar.getEvents(today, future);
@@ -42,7 +42,7 @@ function regenerarHorariosDisponibles() {
     { inicio: "15:00", fin: "17:30" },
     { inicio: "18:00", fin: "20:30" },
     { inicio: "21:00", fin: "23:30" }
-  ];
+  ]; //formato de los horarios
 
   var nuevasFilas = [];
   var iterarDias = Math.ceil((future - today) / (1000 * 60 * 60 * 24));
