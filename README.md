@@ -33,7 +33,7 @@ Para que el script funcione correctamente, es necesario lo siguiente:
       )
       ```  
   - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`: Activa el envío de datos al editarse. Debe tener el siguiente formato:  
-    - **Encabezados (A1:B1)**: `fecha inicial`, `fecha final`.  
+    - **Encabezados (A1:B1)**: `fecha inicial`, `fecha final`.  (ACA ENVIAR DATOS FORMATO FECHA DESDE RUNAMATIC)
     - **Fila 2 (A2:B2)**: Fechas en formato ISO, por ejemplo:  
       ```
       A2: 2025-09-13T00:00:00-03:00
