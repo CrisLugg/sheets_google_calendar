@@ -19,8 +19,8 @@ Para que el script funcione correctamente, es necesario lo siguiente:
           {
             FILTER(
               TEXTO(Disponibilidad!A2:A, "yyyy-mm-dd") & " " & Disponibilidad!B2:B,
-              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(IZQUIERDA(Disponibilidad!B2:B,5)) >= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$A$2,10))) + HORANUMERO(EXTRAE(Fechas!$A$2,12,5))) *
-              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(DERECHA(Disponibilidad!B2:B,5)) <= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$B$2,10))) + HORANUMERO(EXTRAE(Fechas!$B$2,12,5)))
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(IZQUIERDA(Disponibilidad!B2:B,5)) >= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(HOJA_DE_FECHA!$A$2,10))) + HORANUMERO(EXTRAE(HOJA_DE_FECHA!$A$2,12,5))) *
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(DERECHA(Disponibilidad!B2:B,5)) <= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(HOJA_DE_FECHA!$B$2,10))) + HORANUMERO(EXTRAE(HOJA_DE_FECHA!$B$2,12,5)))
             ),
             FILTER(
               Disponibilidad!C2:C,
