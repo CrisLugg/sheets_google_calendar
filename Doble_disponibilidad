@@ -6,7 +6,7 @@ const SHEET_NAME_CONSULTA = '{REEMPLAZAR_POR_NOMBRE_HOJA}'; // Hoja original
 const WATCH_SHEET_FECHAS = '{REEMPLAZAR_POR_NOMBRE_HOJA_FECHAS}'; // Hoja original de fechas
 const SHEET_NAME_CONSULTA_SALON = '{REEMPLAZAR_POR_NOMBRE_HOJA_SALON}'; // Hoja para consulta del salón
 const WATCH_SHEET_FECHAS_SALON = '{REEMPLAZAR_POR_NOMBRE_HOJA_FECHAS_SALON}'; // Hoja de fechas del salón
-const CALENDAR_ID = '{REEMPLAZAR_POR_ID_CALENDARIO}'; // ID del calendario
+const CALENDAR_ID = '{REEMPLAZAR_POR_ID_CALENDAR}'; // ID del calendario
 
 // Función contenedora para el activador de calendario
 function alActualizarCalendario() {
