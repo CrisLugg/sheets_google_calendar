@@ -5,17 +5,12 @@
 Para que el script funcione correctamente, es necesario lo siguiente:  
 
 - **Activadores de Google Apps Script**:  
-  - **Desde la hoja de cálculo - Al modificar**: Activa la función `onChange` cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`. La Hoja debe tener los encabezados fecha inicial, fecha final que carga desde runamatic estos datos como campos de fecha y hora. 
+  - **Desde la hoja de cálculo - Al modificar**: Activa la función `onChange` cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`. Esto envía el contenido de la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` al campo de bot en la API.  
+  - **Calendario - Modificado**: Activa la función `alActualizarCalendario` cuando se modifica el calendario configurado en `CALENDAR_ID`. Esto actualiza la hoja `Disponibilidad`.  
 
-    Este activador cuando se modifica la HOJA_DE_CONSULTA manda el contenido de la HOJA_DE_FECHA al campo de bot
-    
-  - **Calendario - Modificado**: Activa la función `alActualizarCalendario` cuando se modifica el calendario configurado en `CALENDAR_ID`.  
-
-    Este activador permite actualizar la hoja de disponibilidad cuando se actualiza el calendario.
-    
 - **Hojas**:  
   - `Disponibilidad`: Almacena fechas, franjas horarias y estado (Disponible/Ocupado).  
-  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`: Contiene los datos enviados a la API. Debe tener el siguiente formato:  
+  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`: Contiene los datos enviados a la API. Debe tener el siguiente formato:  
     - **Encabezados (A1:B1)**: `Franja horaria`, `Disponibilidad`.  
     - **Celda A2**: Contiene la siguiente fórmula `ARRAYFORMULA` para filtrar horarios disponibles según el rango de fechas:  
       ```excel
@@ -37,67 +32,63 @@ Para que el script funcione correctamente, es necesario lo siguiente:
         )
       )
       ```  
-  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`: Activa el envío de datos al editarse. Debe tener el siguiente formato:  
-    - **Encabezados (A1:B1)**: `fecha inicial`, `fecha final`.  (ACA ENVIAR DATOS FORMATO FECHA DESDE RUNAMATIC A LA HOJA DE GOOGLE)
-    - **Fila 2 (A2:B2)**: Fechas en formato ISO, por ejemplo:  
+  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`: Activa el envío de datos al editarse. Debe tener el siguiente formato:  
+    - **Encabezados (A1:B1)**: `fecha inicial`, `fecha final`.  
+    - **Fila 2 (A2:B2)**: Fechas en formato ISO cargadas desde Runamatic como campos de fecha y hora, por ejemplo:  
       ```
       A2: 2025-09-13T00:00:00-03:00
       B2: 2025-09-13T23:59:00-03:00
       ```
 
-Este script de Google Apps Script gestiona horarios disponibles en un calendario de Google y sincroniza datos con una API externa al editar una hoja específica en un Google Spreadsheet.
-
 ## Funcionalidad
 1. **Generación de Horarios Disponibles**:
-   - Lee eventos del calendario de Google configurado en `CALENDAR_ID`.
+   - Lee eventos del calendario de Google configurado en `CALENDAR_ID` (generalmente el correo del calendario).
    - Genera horarios en franjas predefinidas (12:00-14:30, 15:00-17:30, 18:00-20:30, 21:00-23:30) para los próximos 119 días.
    - Marca cada franja como "Disponible" u "Ocupado" según los eventos del calendario.
    - Guarda los resultados en la hoja `Disponibilidad`.
 
 2. **Sincronización con API**:
-   - Cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`, envía los datos de la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` a la API configurada en `API_URL`.
+   - Cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`, envía los datos de la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` a la API configurada en `API_URL`.
    - Los datos se envían en formato texto, autenticados con el token `{REEMPLAZAR_POR_RUNAMATIC_API_KEY}`.
 
 3. **Automatización**:
-   - Se ejecuta automáticamente al actualizar el calendario (`alActualizarCalendario`) o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` (`onChange`).
+   - Se ejecuta automáticamente al actualizar el calendario (`alActualizarCalendario`) o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` (`onChange`).
 
 ## Configuración
 - **Constantes globales**:
   - `API_URL`: URL de la API (`https://app.runamatic.io/api/accounts/bot_fields/{REEMPLAZAR_POR_ID_CAMPO_BOT}`).
   - `ACCESS_TOKEN`: Token para autenticar la API (`{REEMPLAZAR_POR_RUNAMATIC_API_KEY}`).
-  - `SHEET_NAME_CONSULTA`: Hoja con los datos enviados (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`).
-  - `WATCH_SHEET_FECHAS`: Hoja que activa el envío (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`).
-  - `CALENDAR_ID`: ID del calendario de Google (`{REEMPLAZAR_POR_ID_DEL_CALENDARIO}`).
+  - `SHEET_NAME_CONSULTA`: Hoja con los datos enviados (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`).
+  - `WATCH_SHEET_FECHAS`: Hoja que activa el envío (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`).
+  - `CALENDAR_ID`: ID del calendario de Google, generalmente el correo del calendario (`{REEMPLAZAR_POR_ID_DEL_CALENDARIO}`).
 
 ## Funciones Principales
 - `alActualizarCalendario()`: Ejecuta la generación de horarios disponibles.
 - `regenerarHorariosDisponibles()`: Genera horarios en la hoja `Disponibilidad`.
-- `onChange(e)`: Detecta cambios en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` y envía datos a la API.
+- `onChange(e)`: Detecta cambios en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y envía datos de `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` a la API.
 - `convertToText(data)`: Convierte datos de la hoja a texto.
 - `sendDataToApp(sheetContent, apiUrl)`: Envía datos a la API.
 - `listSheetNames()`: Lista las hojas disponibles en caso de error.
 
 ## Requisitos
-- Google Spreadsheet con las hojas `Disponibilidad`, `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`.
+- Google Spreadsheet con las hojas `Disponibilidad`, `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`.
 - Acceso al calendario de Google configurado en `CALENDAR_ID`.
 - Permisos para ejecutar Google Apps Script y conectar con la API externa.
 
 ## Uso
 1. Configura el script en un proyecto de Google Apps Script asociado a tu Google Spreadsheet.
 2. Reemplaza las constantes `{REEMPLAZAR_POR_*}` con los valores correspondientes (ID de la API, token, nombres de hojas, ID del calendario).
-3. Configura las hojas `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` con los formatos indicados.
+3. Configura las hojas `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` con los formatos indicados.
 4. Configura los activadores en Google Apps Script:
    - **Desde la hoja de cálculo - Al modificar**: Para la función `onChange`.
    - **Calendario - Modificado**: Para la función `alActualizarCalendario`.
-5. El script se ejecuta automáticamente al actualizar el calendario o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`.
+5. El script se ejecuta automáticamente al actualizar el calendario o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`.
 
 ## Notas
-- Si la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` no existe, el script registra un error y lista las hojas disponibles.
+- Si la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` no existe, el script registra un error y lista las hojas disponibles.
 - Los errores durante el envío a la API se registran en el log de Google Apps Script.
-- Asegúrate de que la fórmula en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y las fechas en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` estén correctamente configuradas para evitar errores.
-
-
-
+- Asegúrate de que la fórmula en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` y las fechas en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` estén correctamente configuradas para evitar errores.
+- Los datos en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` deben provenir de Runamatic como campos de fecha y hora en formato ISO.
 
 # README - Script de Gestión de Doble Disponibilidad
 
