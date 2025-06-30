@@ -85,7 +85,7 @@ Este script de Google Apps Script gestiona horarios disponibles en un calendario
 
 
 
-# README - Script de Gestión de Disponibilidad y Salón
+# README - Script de Gestión de Doble Disponibilidad
 
 Este script de Google Apps Script gestiona horarios disponibles en un calendario de Google y sincroniza datos con APIs externas al editar hojas específicas en un Google Spreadsheet.
 
