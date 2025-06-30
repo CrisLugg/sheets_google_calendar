@@ -1,11 +1,90 @@
 # sheets_google_calendar#
 
+# README - Script de Gestión de Disponibilidad
+
+Este script de Google Apps Script gestiona horarios disponibles en un calendario de Google y sincroniza datos con una API externa al editar una hoja específica en un Google Spreadsheet.
+
+## Funcionalidad
+1. **Generación de Horarios Disponibles**:
+   - Lee eventos del calendario de Google configurado en `CALENDAR_ID`.
+   - Genera horarios en franjas predefinidas (12:00-14:30, 15:00-17:30, 18:00-20:30, 21:00-23:30) para los próximos 119 días.
+   - Marca cada franja como "Disponible" u "Ocupado" según los eventos del calendario.
+   - Guarda los resultados en la hoja `Disponibilidad`.
+
+2. **Sincronización con API**:
+   - Cuando se edita la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`, envía los datos de la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` a la API configurada en `API_URL`.
+   - Los datos se envían en formato texto, autenticados con el token `{REEMPLAZAR_POR_RUNAMATIC_API_KEY}`.
+
+3. **Automatización**:
+   - Se ejecuta automáticamente al actualizar el calendario (`alActualizarCalendario`) o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` (`onChange`).
+
+## Archivos y Hojas
+- **Hojas de Google Sheets**:
+  - `Disponibilidad`: Almacena fechas, franjas horarias y estado (Disponible/Ocupado).
+  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`: Contiene los datos enviados a la API. Debe tener el siguiente formato:
+    - **Encabezados (A1:B1)**: `Franja horaria`, `Disponibilidad`.
+    - **Celda A2**: Contiene la siguiente fórmula `ARRAYFORMULA` para filtrar horarios disponibles según el rango de fechas:
+      ```excel
+      =ARRAYFORMULA(
+        QUERY(
+          {
+            FILTER(
+              TEXTO(Disponibilidad!A2:A, "yyyy-mm-dd") & " " & Disponibilidad!B2:B,
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(IZQUIERDA(Disponibilidad!B2:B,5)) >= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$A$2,10))) + HORANUMERO(EXTRAE(Fechas!$A$2,12,5))) *
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(DERECHA(Disponibilidad!B2:B,5)) <= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$B$2,10))) + HORANUMERO(EXTRAE(Fechas!$B$2,12,5)))
+            ),
+            FILTER(
+              Disponibilidad!C2:C,
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(IZQUIERDA(Disponibilidad!B2:B,5)) >= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$A$2,10))) + HORANUMERO(EXTRAE(Fechas!$A$2,12,5))) *
+              (TO_PURE_NUMBER(Disponibilidad!A2:A) + HORANUMERO(DERECHA(Disponibilidad!B2:B,5)) <= TO_PURE_NUMBER(FECHANUMERO(IZQUIERDA(Fechas!$B$2,10))) + HORANUMERO(EXTRAE(Fechas!$B$2,12,5)))
+            )
+          },
+          "Select Col1, Col2"
+        )
+      )
+      ```
+  - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`: Activa el envío de datos al editarse. Debe tener el siguiente formato:
+    - **Encabezados (A1:B1)**: `fecha inicial`, `fecha final`.
+    - **Fila 2 (A2:B2)**: Fechas en formato ISO, por ejemplo:
+      ```
+      A2: 2025-09-13T00:00:00-03:00
+      B2: 2025-09-13T23:59:00-03:00
+      ```
+
+## Configuración
+- **Constantes globales**:
+  - `API_URL`: URL de la API (`https://app.runamatic.io/api/accounts/bot_fields/{REEMPLAZAR_POR_ID_CAMPO_BOT}`).
+  - `ACCESS_TOKEN`: Token para autenticar la API (`{REEMPLAZAR_POR_RUNAMATIC_API_KEY}`).
+  - `SHEET_NAME_CONSULTA`: Hoja con los datos enviados (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`).
+  - `WATCH_SHEET_FECHAS`: Hoja que activa el envío (`{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`).
+  - `CALENDAR_ID`: ID del calendario de Google (`{REEMPLAZAR_POR_ID_DEL_CALENDARIO}`).
+
+## Funciones Principales
+- `alActualizarCalendario()`: Ejecuta la generación de horarios disponibles.
+- `regenerarHorariosDisponibles()`: Genera horarios en la hoja `Disponibilidad`.
+- `onChange(e)`: Detecta cambios en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` y envía datos a la API.
+- `convertToText(data)`: Convierte datos de la hoja a texto.
+- `sendDataToApp(sheetContent, apiUrl)`: Envía datos a la API.
+- `listSheetNames()`: Lista las hojas disponibles en caso de error.
+
+## Requisitos
+- Google Spreadsheet con las hojas `Disponibilidad`, `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`.
+- Acceso al calendario de Google configurado en `CALENDAR_ID`.
+- Permisos para ejecutar Google Apps Script y conectar con la API externa.
+
+## Uso
+1. Configura el script en un proyecto de Google Apps Script asociado a tu Google Spreadsheet.
+2. Reemplaza las constantes `{REEMPLAZAR_POR_*}` con los valores correspondientes (ID de la API, token, nombres de hojas, ID del calendario).
+3. Configura las hojas `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` con los formatos indicados.
+4. El script se ejecuta automáticamente al actualizar el calendario o al editar la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}`.
+
+## Notas
+- Si la hoja `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` no existe, el script registra un error y lista las hojas disponibles.
+- Los errores durante el envío a la API se registran en el log de Google Apps Script.
+- Asegúrate de que la fórmula en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}` y las fechas en `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}` estén correctamente configuradas para evitar errores.
 
 
 
-
-
-## DOBLE DISPONIBILIDAD.
 # README - Script de Gestión de Disponibilidad y Salón
 
 Este script de Google Apps Script gestiona horarios disponibles en un calendario de Google y sincroniza datos con APIs externas al editar hojas específicas en un Google Spreadsheet.
