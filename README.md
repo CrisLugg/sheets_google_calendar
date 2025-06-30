@@ -13,7 +13,7 @@ Para que el script funcione correctamente, es necesario lo siguiente:
 
     Este activador permite actualizar la hoja de disponibilidad cuando se actualiza el calendario.
     
-- **Archivos y Hojas**:  
+- **Hojas**:  
   - `Disponibilidad`: Almacena fechas, franjas horarias y estado (Disponible/Ocupado).  
   - `{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}`: Contiene los datos enviados a la API. Debe tener el siguiente formato:  
     - **Encabezados (A1:B1)**: `Franja horaria`, `Disponibilidad`.  
