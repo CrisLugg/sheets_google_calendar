@@ -2,7 +2,7 @@
 const API_URL = 'https://app.runamatic.io/api/accounts/bot_fields/{REEMPLAZAR_POR_ID_CAMPO_BOT}'; 
 const ACCESS_TOKEN = '{REEMPLAZAR_POR_RUNAMATIC_API_KEY}'; 
 const SHEET_NAME_CONSULTA = '{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}'; 
-const WATCH_SHEET_FECHAS = '{REEMPLAZAR_POR_NOMBRE_HOJA_DE CONSULTA}';
+const WATCH_SHEET_FECHAS = '{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}';
 const CALENDAR_ID = '{REEMPLAZAR_POR_ID_DEL_CALENDARIO}'; //generalmente es el mail del calendario de google
 
 // Función contenedora para el activador de calendario
