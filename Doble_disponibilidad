@@ -2,7 +2,7 @@
 const API_URL = 'https://app.runamatic.io/api/accounts/bot_fields/{REEMPLAZAR_POR_ID_CAMPO_BOT}'; // API para Consulta2
 const API_URL_SALON = 'https://app.runamatic.io/api/accounts/bot_fields/{REEMPLAZAR_POR_ID_CAMPO_BOT_SALON}'; // API para ConsultaSalon
 const ACCESS_TOKEN = '{REEMPLAZAR_POR_RUNAMATIC_API_KEY}'; // Token para ambas APIs
-const SHEET_NAME_CONSULTA = '{REEMPLAZAR_POR_NOMBRE_HOJA}'; // Hoja original
+const SHEET_NAME_CONSULTA = '{REEMPLAZAR_POR_NOMBRE_HOJA_CONSULTAS}'; // Hoja original
 const WATCH_SHEET_FECHAS = '{REEMPLAZAR_POR_NOMBRE_HOJA_FECHAS}'; // Hoja original de fechas
 const SHEET_NAME_CONSULTA_SALON = '{REEMPLAZAR_POR_NOMBRE_HOJA_SALON}'; // Hoja para consulta del salón
 const WATCH_SHEET_FECHAS_SALON = '{REEMPLAZAR_POR_NOMBRE_HOJA_FECHAS_SALON}'; // Hoja de fechas del salón
