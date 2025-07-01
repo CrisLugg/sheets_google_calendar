@@ -4,6 +4,13 @@ const ACCESS_TOKEN = '{REEMPLAZAR_POR_RUNAMATIC_API_KEY}';
 const SHEET_NAME_CONSULTA = '{REEMPLAZAR_POR_NOMBRE_HOJA_DE_CONSULTA}'; 
 const WATCH_SHEET_FECHAS = '{REEMPLAZAR_POR_NOMBRE_HOJA_DE_FECHA}';
 const CALENDAR_ID = '{REEMPLAZAR_POR_ID_DEL_CALENDARIO}'; //generalmente es el mail del calendario de google
+const DIAS_FUTUROS = 119; // Cantidad de días a actualizar
+const FRANJAS_HORARIAS = [
+  { inicio: "12:00", fin: "14:30" },
+  { inicio: "15:00", fin: "17:30" },
+  { inicio: "18:00", fin: "20:30" },
+  { inicio: "21:00", fin: "23:30" }
+]; // Franjas horarias predefinidas
 
 // Función contenedora para el activador de calendario
 function alActualizarCalendario() {
@@ -19,7 +26,7 @@ function regenerarHorariosDisponibles() {
 
   var today = new Date();
   var future = new Date();
-  future.setDate(today.getDate() + 119); // cantidad de días que se van actualizar
+  future.setDate(today.getDate() + DIAS_FUTUROS); // Usar constante DIAS_FUTUROS
 
   var calendar = CalendarApp.getCalendarById(CALENDAR_ID);
   var events = calendar.getEvents(today, future);
@@ -37,13 +44,6 @@ function regenerarHorariosDisponibles() {
     });
   });
 
-  var franjas = [
-    { inicio: "12:00", fin: "14:30" },
-    { inicio: "15:00", fin: "17:30" },
-    { inicio: "18:00", fin: "20:30" },
-    { inicio: "21:00", fin: "23:30" }
-  ]; //formato de los horarios
-
   var nuevasFilas = [];
   var iterarDias = Math.ceil((future - today) / (1000 * 60 * 60 * 24));
 
@@ -52,7 +52,7 @@ function regenerarHorariosDisponibles() {
     dia.setDate(today.getDate() + i);
     var diaStr = Utilities.formatDate(dia, Session.getScriptTimeZone(), "yyyy-MM-dd");
 
-    franjas.forEach(function(franja) {
+    FRANJAS_HORARIAS.forEach(function(franja) { // Usar constante FRANJAS_HORARIAS
       var disponible = true;
       var franjaInicio = new Date(dia);
       franjaInicio.setHours(parseInt(franja.inicio.split(":")[0]), parseInt(franja.inicio.split(":")[1]));
@@ -81,16 +81,14 @@ function regenerarHorariosDisponibles() {
   }
 }
 
-// Función onChange para manejar cambios en Fechas
+// Resto del código sin cambios
 function onChange(e) {
   try {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const hojaActiva = e && e.source.getActiveSheet().getName();
     
-    // Verificar si el cambio ocurrió en la hoja de interés
     if (!hojaActiva || hojaActiva !== WATCH_SHEET_FECHAS) return;
 
-    // Consulta original 
     const hojaConsulta = spreadsheet.getSheetByName(SHEET_NAME_CONSULTA);
     if (!hojaConsulta) {
       Logger.log(`Error: La hoja "${SHEET_NAME_CONSULTA}" no existe.`);
@@ -105,7 +103,6 @@ function onChange(e) {
   }
 }
 
-// Función para convertir datos a texto
 function convertToText(data) {
   const headers = data[0];
   const rows = data.slice(1);
@@ -115,7 +112,6 @@ function convertToText(data) {
   return textArray.join('\n');
 }
 
-// Función para enviar datos a la API
 function sendDataToApp(sheetContent, apiUrl) {
   const payload = `value=${encodeURIComponent(sheetContent)}`;
   const options = {
@@ -134,7 +130,6 @@ function sendDataToApp(sheetContent, apiUrl) {
   }
 }
 
-// Función para listar nombres de hojas
 function listSheetNames() {
   const sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
   Logger.log('Hojas disponibles en este archivo:');
